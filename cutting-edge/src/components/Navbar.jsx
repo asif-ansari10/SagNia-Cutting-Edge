@@ -1,31 +1,66 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import logo from "../assets/sagnia-logo.png";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
   const location = useLocation();
 
-  // Detect scroll for shrinking effect
+  // Shrink effect on scroll
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Navbar links
+  // Smooth scroll helper
+  const scrollTo = (position) => {
+    window.scrollTo({ top: position, behavior: "smooth" });
+  };
+
+  // Scroll to specific section
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) element.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Handle navigation or scroll
+  const handleScrollLink = (id) => {
+    setOpen(false);
+
+    if (location.pathname === "/") {
+      scrollToSection(id);
+    } else {
+      navigate("/");
+      setTimeout(() => scrollToSection(id), 400);
+    }
+  };
+
+  // Handle Home button
+  const handleHomeClick = () => {
+    setOpen(false);
+
+    if (location.pathname === "/") {
+      // Already on homepage → scroll to top smoothly
+      scrollTo(0);
+    } else {
+      // Navigate home → then scroll to top
+      navigate("/");
+      setTimeout(() => scrollTo(0), 400);
+    }
+  };
+
   const links = [
-    { name: "HOME", path: "/" },
-    { name: "BRANDS", path: "/brands" },
-    { name: "EDGE BANDING", path: "#" },
-    { name: "PANEL CUTTING", path: "#" },
-    { name: "CNC", path: "#" },
-    { name: "FAQ's", path: "#" },
-    { name: "CONTACT", path: "/contact" },
+    { name: "HOME", type: "home" },
+    { name: "BRANDS", type: "route", path: "/brands" },
+    { name: "EDGE BANDING", type: "scroll", target: "edgeBanding" },
+    { name: "PANEL CUTTING", type: "scroll", target: "panelCutting" },
+    { name: "CNC", type: "scroll", target: "cncSection" },
+    { name: "FAQ's", type: "route", path: "#" },
+    { name: "CONTACT", type: "route", path: "/contact" },
   ];
 
   return (
@@ -44,7 +79,7 @@ export default function Navbar() {
         <span className="text-gold font-medium">0113 234 0737</span>
       </div>
 
-      {/* Main Navbar */}
+      {/* Navbar */}
       <nav className="flex justify-between items-center px-6 md:px-16">
         {/* Logo */}
         <div
@@ -52,11 +87,11 @@ export default function Navbar() {
             scrolled ? "scale-75" : "scale-100"
           }`}
         >
-          <Link to="/" onClick={() => setOpen(false)}>
+          <Link to="/" onClick={() => handleHomeClick()}>
             <img
               src={logo}
               alt="SagNia Logo"
-              className="h-16 md:h-20 w-auto transition-all duration-500"
+              className="h-16 md:h-20 w-auto transition-all duration-500 cursor-pointer"
             />
           </Link>
         </div>
@@ -65,17 +100,33 @@ export default function Navbar() {
         <ul className="hidden md:flex space-x-8 font-semibold">
           {links.map((link) => (
             <li key={link.name}>
-              <Link
-                to={link.path}
-                onClick={() => setOpen(false)}
-                className={`transition-colors duration-300 relative after:content-[''] after:block after:w-0 after:h-[2px] after:bg-gold after:transition-all after:duration-300 hover:after:w-full ${
-                  location.pathname === link.path
-                    ? "text-gold after:w-full"
-                    : "text-white hover:text-gold"
-                }`}
-              >
-                {link.name}
-              </Link>
+              {link.type === "route" ? (
+                <Link
+                  to={link.path}
+                  onClick={() => setOpen(false)}
+                  className={`transition-colors duration-300 relative after:block after:w-0 after:h-[2px] after:bg-gold after:transition-all after:duration-300 hover:after:w-full ${
+                    location.pathname === link.path
+                      ? "text-gold after:w-full"
+                      : "text-white hover:text-gold"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              ) : link.type === "scroll" ? (
+                <button
+                  onClick={() => handleScrollLink(link.target)}
+                  className="text-white hover:text-gold transition-colors duration-300 relative after:block after:w-0 after:h-[2px] after:bg-gold after:transition-all after:duration-300 hover:after:w-full"
+                >
+                  {link.name}
+                </button>
+              ) : (
+                <button
+                  onClick={handleHomeClick}
+                  className="text-white hover:text-gold transition-colors duration-300 relative after:block after:w-0 after:h-[2px] after:bg-gold after:transition-all after:duration-300 hover:after:w-full"
+                >
+                  HOME
+                </button>
+              )}
             </li>
           ))}
         </ul>
@@ -94,21 +145,39 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Dropdown Menu */}
+      {/* Mobile Menu */}
       {open && (
         <div className="md:hidden bg-richblack border-t border-softgray text-center mt-2 pb-4">
-          {links.map((link) => (
-            <Link
-              key={link.name}
-              to={link.path}
-              onClick={() => setOpen(false)}
-              className={`block py-3 text-lightgold hover:text-gold transition-colors ${
-                location.pathname === link.path ? "text-gold" : ""
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
+          {links.map((link) =>
+            link.type === "route" ? (
+              <Link
+                key={link.name}
+                to={link.path}
+                onClick={() => setOpen(false)}
+                className={`block py-3 text-lightgold hover:text-gold transition-colors ${
+                  location.pathname === link.path ? "text-gold" : ""
+                }`}
+              >
+                {link.name}
+              </Link>
+            ) : link.type === "scroll" ? (
+              <button
+                key={link.name}
+                onClick={() => handleScrollLink(link.target)}
+                className="block w-full py-3 text-lightgold hover:text-gold transition-colors"
+              >
+                {link.name}
+              </button>
+            ) : (
+              <button
+                key="HOME"
+                onClick={handleHomeClick}
+                className="block w-full py-3 text-lightgold hover:text-gold transition-colors"
+              >
+                HOME
+              </button>
+            )
+          )}
           <button className="bg-gold text-black w-11/12 mx-auto mt-4 py-2 rounded-md font-semibold hover:bg-lightgold transition-all">
             Login
           </button>

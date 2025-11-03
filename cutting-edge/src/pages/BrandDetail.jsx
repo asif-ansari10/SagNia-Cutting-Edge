@@ -13,7 +13,7 @@ export default function BrandDetail() {
     );
 
   return (
-    <section className="min-h-screen bg-richblack text-white px-4 sm:px-6 lg:px-16 pt-32 pb-16">
+    <section className="min-h-screen bg-richblack text-white px-4 sm:px-6 lg:px-16 pt-40 pb-16">
     {/* Header */}
       <div className="text-center mb-10">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-gold mb-4">

@@ -40,7 +40,7 @@ export default function Contact() {
   };
 
   return (
-<section className="min-h-screen bg-richblack text-white px-4 sm:px-6 lg:px-16 pt-32 pb-16 flex flex-col items-center justify-center">
+<section className="min-h-screen bg-richblack text-white px-4 sm:px-6 lg:px-16 pt-40 pb-16 flex flex-col items-center justify-center">
       {/* Title */}
       <div className="text-center mb-10">
         <h2 className="text-4xl md:text-5xl font-serif text-gold font-semibold">
