@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import heroBg1 from "../assets/hero-bg-1.png";
 import heroBg2 from "../assets/hero-bg-2.webp";
 import heroBg3 from "../assets/hero-bg-3.jpg";
+import { Link } from "react-router-dom";
+
 
 export default function HeroSection() {
   const images = [heroBg1, heroBg2, heroBg3];
@@ -55,9 +57,11 @@ export default function HeroSection() {
           Where precision meets luxury. Experience excellence with SagNia.
         </p>
 
+        <Link to="/quote/start">
         <button className="mt-6 sm:mt-8 px-6 sm:px-8 py-2 sm:py-3 bg-gold text-black font-semibold text-sm sm:text-base md:text-lg rounded-xl hover:bg-lightgold transition-all shadow-md">
           Get Quote
         </button>
+        </Link>
       </div>
     </section>
   );

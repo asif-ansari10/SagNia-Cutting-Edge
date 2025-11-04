@@ -9,25 +9,21 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Shrink effect on scroll
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Smooth scroll helper
   const scrollTo = (position) => {
     window.scrollTo({ top: position, behavior: "smooth" });
   };
 
-  // Scroll to specific section
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) element.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Handle navigation or scroll
   const handleScrollLink = (id) => {
     setOpen(false);
 
@@ -39,15 +35,11 @@ export default function Navbar() {
     }
   };
 
-  // Handle Home button
   const handleHomeClick = () => {
     setOpen(false);
-
     if (location.pathname === "/") {
-      // Already on homepage → scroll to top smoothly
       scrollTo(0);
     } else {
-      // Navigate home → then scroll to top
       navigate("/");
       setTimeout(() => scrollTo(0), 400);
     }
@@ -59,7 +51,7 @@ export default function Navbar() {
     { name: "EDGE BANDING", type: "scroll", target: "edgeBanding" },
     { name: "PANEL CUTTING", type: "scroll", target: "panelCutting" },
     { name: "CNC", type: "scroll", target: "cncSection" },
-    { name: "FAQ's", type: "route", path: "#" },
+    { name: "FAQ's", type: "route", path: "/faqs" },
     { name: "CONTACT", type: "route", path: "/contact" },
   ];
 
@@ -69,7 +61,6 @@ export default function Navbar() {
         scrolled ? "bg-richblack/95 shadow-lg py-3" : "bg-richblack py-6"
       }`}
     >
-      {/* Top contact bar */}
       <div
         className={`text-center text-lightgold text-sm transition-all duration-500 ${
           scrolled ? "opacity-0 h-0 overflow-hidden" : "opacity-100 py-2"
@@ -79,15 +70,13 @@ export default function Navbar() {
         <span className="text-gold font-medium">0113 234 0737</span>
       </div>
 
-      {/* Navbar */}
       <nav className="flex justify-between items-center px-6 md:px-16">
-        {/* Logo */}
         <div
           className={`flex items-center transition-all duration-500 ${
             scrolled ? "scale-75" : "scale-100"
           }`}
         >
-          <Link to="/" onClick={() => handleHomeClick()}>
+          <Link to="/" onClick={handleHomeClick}>
             <img
               src={logo}
               alt="SagNia Logo"
@@ -96,8 +85,8 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* Desktop Links */}
-        <ul className="hidden md:flex space-x-8 font-semibold">
+        <ul className="hidden md:flex space-x-8 font-semibold mx-auto">
+
           {links.map((link) => (
             <li key={link.name}>
               {link.type === "route" ? (
@@ -131,12 +120,8 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* Login Button */}
-        <button className="hidden md:block bg-gold text-black px-5 py-2 rounded-md font-semibold hover:bg-lightgold transition-all">
-          Login
-        </button>
+        {/* ✅ Login Button removed here */}
 
-        {/* Mobile Menu Toggle */}
         <div
           className="md:hidden text-gold text-2xl cursor-pointer"
           onClick={() => setOpen(!open)}
@@ -145,7 +130,6 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
       {open && (
         <div className="md:hidden bg-richblack border-t border-softgray text-center mt-2 pb-4">
           {links.map((link) =>
@@ -178,9 +162,7 @@ export default function Navbar() {
               </button>
             )
           )}
-          <button className="bg-gold text-black w-11/12 mx-auto mt-4 py-2 rounded-md font-semibold hover:bg-lightgold transition-all">
-            Login
-          </button>
+          {/* ✅ Login Button removed here */}
         </div>
       )}
     </header>

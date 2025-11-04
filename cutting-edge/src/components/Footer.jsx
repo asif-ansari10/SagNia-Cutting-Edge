@@ -1,15 +1,45 @@
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaPhone, FaEnvelope } from "react-icons/fa";
 import logo from "../assets/sagnia-logo.png";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 export default function Footer() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    if (section) section.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleScrollOrNavigate = (target) => {
+    if (location.pathname === "/") {
+      scrollToSection(target);
+    } else {
+      navigate("/");
+      setTimeout(() => scrollToSection(target), 400);
+    }
+  };
+
+  const handleHomeClick = () => {
+    if (location.pathname === "/") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      navigate("/");
+      setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 400);
+    }
+  };
+
   return (
     <footer className="bg-richblack text-white py-10 px-6 md:px-16 border-t border-softgray">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
+
         {/* Logo + About */}
         <div>
           <img src={logo} alt="SagNia Logo" className="h-16 w-auto mb-4" />
           <p className="text-softgray text-sm leading-relaxed">
-            At <span className="text-gold font-semibold">SagNia Cutting Edge</span>, we combine innovation with craftsmanship to deliver premium quality solutions for your modern interiors.
+            At <span className="text-gold font-semibold">SagNia Cutting Edge</span>,
+            we combine innovation with craftsmanship to deliver premium quality solutions
+            for your modern interiors.
           </p>
         </div>
 
@@ -17,16 +47,61 @@ export default function Footer() {
         <div>
           <h3 className="text-gold text-lg font-semibold mb-3">Quick Links</h3>
           <ul className="space-y-2">
-            {["Home", "Edge Banding", "Panel Cutting", "CNC", "FAQs", "Contact"].map((item, idx) => (
-              <li key={idx}>
-                <a
-                  href="#"
-                  className="hover:text-gold transition-colors duration-300 text-softgray"
-                >
-                  {item}
-                </a>
-              </li>
-            ))}
+
+            <li>
+              <button
+                onClick={handleHomeClick}
+                className="text-softgray hover:text-gold transition-colors duration-300"
+              >
+                Home
+              </button>
+            </li>
+
+            <li>
+              <button
+                onClick={() => handleScrollOrNavigate("edgeBanding")}
+                className="text-softgray hover:text-gold transition-colors duration-300"
+              >
+                Edge Banding
+              </button>
+            </li>
+
+            <li>
+              <button
+                onClick={() => handleScrollOrNavigate("panelCutting")}
+                className="text-softgray hover:text-gold transition-colors duration-300"
+              >
+                Panel Cutting
+              </button>
+            </li>
+
+            <li>
+              <button
+                onClick={() => handleScrollOrNavigate("cncSection")}
+                className="text-softgray hover:text-gold transition-colors duration-300"
+              >
+                CNC
+              </button>
+            </li>
+
+            <li>
+              <Link
+                to="/faqs"
+                className="text-softgray hover:text-gold transition-colors duration-300"
+              >
+                FAQs
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                to="/contact"
+                className="text-softgray hover:text-gold transition-colors duration-300"
+              >
+                Contact
+              </Link>
+            </li>
+
           </ul>
         </div>
 
@@ -62,7 +137,6 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom Bar */}
       <div className="mt-10 border-t border-softgray pt-5 text-center text-softgray text-sm">
         © {new Date().getFullYear()} <span className="text-gold font-semibold">SagNia Cutting Edge</span>. All rights reserved.
       </div>

@@ -1,66 +1,55 @@
 import { useParams, Link } from "react-router-dom";
-import { brandsData } from "../data/brandsData";
+import { useEffect, useState } from "react";
+import { useQuote } from "../context/QuoteContext";
 
 export default function BrandDetail() {
   const { brandId } = useParams();
-  const brand = brandsData.find((b) => b.id === brandId);
+  const { setQuoteData } = useQuote();
+  const [brand, setBrand] = useState(null);
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/api/brands/${brandId}`)
+      .then(res => res.json())
+      .then(data => setBrand(data));
+  }, [brandId]);
 
   if (!brand)
-    return (
-      <div className="text-center py-20 text-lightgold">
-        Brand not found.
-      </div>
-    );
+    return <div className="text-center pt-40 text-lightgold">Loading...</div>;
 
   return (
-    <section className="min-h-screen bg-richblack text-white px-4 sm:px-6 lg:px-16 pt-40 pb-16">
-    {/* Header */}
-      <div className="text-center mb-10">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-gold mb-4">
-          {brand.name}
-        </h1>
-        <p className="text-lightgold text-base sm:text-lg max-w-3xl mx-auto">
-          {brand.description}
-        </p>
-      </div>
+    <section className="pt-40 px-6 lg:px-16 text-white pb-16">
 
-      {/* Banner */}
+      <h1 className="text-center text-4xl md:text-5xl text-gold font-serif mb-6">{brand.name}</h1>
+      <p className="text-center text-lightgold max-w-3xl mx-auto">{brand.description}</p>
+
       <img
-        src={brand.banner}
-        alt={`${brand.name} banner`}
-        className="w-full h-[200px] sm:h-[300px] md:h-[400px] object-cover rounded-xl mb-12 shadow-lg"
-      />
+  src={`http://localhost:5000${brand.banner}`}
+  className="w-full rounded-xl shadow-lg my-12"
+  alt={brand.name}
+/>
 
-      {/* Categories Section */}
-      <h2 className="text-2xl sm:text-3xl font-serif text-gold mb-8 text-center">
-        Categories
-      </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      <h2 className="text-center text-3xl text-gold font-serif mb-8">Categories</h2>
+
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {brand.categories.map((cat) => (
-          <div
-            key={cat.id}
-            className="bg-softgray/20 border border-softgray hover:border-gold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105"
-          >
+          <div key={cat.id} className="border border-softgray bg-softgray/10 rounded-xl hover:border-gold transition p-4">
             <img
-              src={cat.image}
-              alt={cat.name}
-              className="w-full h-48 sm:h-56 md:h-64 object-cover"
-            />
-            <div className="p-4 sm:p-5">
-              <h3 className="text-lg sm:text-xl font-semibold text-lightgold mb-2">
-                {cat.name}
-              </h3>
-              <p className="text-softgray text-sm mb-4 line-clamp-3">
-                {cat.description}
-              </p>
-              <Link
-                to={`/brands/${brand.id}/${cat.id}`}
-                className="inline-block bg-gold text-black font-semibold text-sm sm:text-base px-4 sm:px-5 py-2 rounded-lg hover:bg-lightgold transition-all"
-              >
-                View Products
-              </Link>
-            </div>
+  src={`http://localhost:5000${cat.image}`}
+  className="w-full h-56 object-cover rounded-md mb-4"
+  alt={cat.name}
+/>
+
+            <h3 className="text-lightgold text-xl font-semibold mb-2">{cat.name}</h3>
+            <p className="text-softgray text-sm mb-4">{cat.description}</p>
+
+            <Link
+              to={`/quote/product/${brand.id}/${cat.id}`}
+              onClick={() => setQuoteData(prev => ({ ...prev, brand: brand.name, category: cat.name }))}
+              className="inline-block bg-gold text-black px-5 py-2 rounded-lg hover:bg-lightgold transition"
+            >
+              View Product
+            </Link>
           </div>
         ))}
       </div>

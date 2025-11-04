@@ -1,4 +1,6 @@
 import cncImg from "../assets/cnc-machine.png";
+import { Link } from "react-router-dom";
+
 
 export default function CNCSection() {
   return (
@@ -13,9 +15,11 @@ export default function CNCSection() {
           logos, or kitchen units with absolute precision. Perfect for both
           simple and complex projects.
         </p>
+        <Link to="/quote/start">
         <button className="bg-gold text-black font-semibold px-6 py-3 rounded-lg hover:bg-lightgold transition-all">
           Get Online Quote
         </button>
+        </Link>
       </div>
       <img
         src={cncImg}

@@ -1,4 +1,5 @@
 import edgeImg from "../assets/edge-banding.png";
+import { Link } from "react-router-dom";
 
 export default function EdgeBanding() {
   return (
@@ -16,9 +17,11 @@ export default function EdgeBanding() {
           we also provide hand-machined edging using Festool machines for curves
           and internals.
         </p>
+        <Link to="/quote/start">
         <button className="bg-gold text-black font-semibold px-6 py-3 rounded-lg hover:bg-lightgold transition-all">
           Get Online Quote
         </button>
+        </Link>
       </div>
       <img
         src={edgeImg}

@@ -1,4 +1,6 @@
 import panelImg from "../assets/panel-cutting.png";
+import { Link } from "react-router-dom";
+
 
 export default function PanelCutting() {
   return (
@@ -15,9 +17,11 @@ export default function PanelCutting() {
           instant quote calculator for quick pricing. Whether one piece or
           twenty, all cuts are handled with precision.
         </p>
+        <Link to="/quote/start">
         <button className="bg-gold text-black font-semibold px-6 py-3 rounded-lg hover:bg-lightgold transition-all">
           Get Online Quote
         </button>
+        </Link>
       </div>
       <img
         src={panelImg}
