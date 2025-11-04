@@ -7,7 +7,7 @@ export default function Brands() {
   const [brands, setBrands] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/brands")
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/brands`)
       .then((res) => res.json())
       .then((data) => setBrands(data))
       .catch((err) => console.log("Error fetching brands:", err));
@@ -21,17 +21,18 @@ export default function Brands() {
         {brands.map((brand) => (
           <Link
             key={brand.id}
-            to={`/quote/brands/${brand.id}`}
+            to={`/quote/brands/${brand.id}`}   // ✅ Use string id
             onClick={() =>
               setQuoteData((prev) => ({ ...prev, brand: brand.id }))
             }
             className="p-6 border border-softgray rounded-xl hover:border-gold hover:scale-105 transition-all text-center"
           >
             <img
-              src={`http://localhost:5000${brand.logo}`}
+              src={`${import.meta.env.VITE_API_BASE_URL}${brand.logo}`}
               className="h-16 mx-auto mb-3 object-contain"
               alt={brand.name}
             />
+
             <p className="text-lightgold">{brand.name}</p>
           </Link>
         ))}

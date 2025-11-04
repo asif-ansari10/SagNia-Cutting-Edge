@@ -8,9 +8,9 @@ export default function BrandDetail() {
   const [brand, setBrand] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/brands/${brandId}`)
-      .then(res => res.json())
-      .then(data => setBrand(data));
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/brands/${brandId}`)
+      .then((res) => res.json())
+      .then((data) => setBrand(data));
   }, [brandId]);
 
   if (!brand)
@@ -19,33 +19,51 @@ export default function BrandDetail() {
   return (
     <section className="pt-40 px-6 lg:px-16 text-white pb-16">
 
-      <h1 className="text-center text-4xl md:text-5xl text-gold font-serif mb-6">{brand.name}</h1>
-      <p className="text-center text-lightgold max-w-3xl mx-auto">{brand.description}</p>
+      <h1 className="text-center text-4xl md:text-5xl text-gold font-serif mb-6">
+        {brand.name}
+      </h1>
+
+      <p className="text-center text-lightgold max-w-3xl mx-auto">
+        {brand.description}
+      </p>
 
       <img
-  src={`http://localhost:5000${brand.banner}`}
-  className="w-full rounded-xl shadow-lg my-12"
-  alt={brand.name}
-/>
+        src={`${import.meta.env.VITE_API_BASE_URL}${brand.banner}`}
+        className="w-full rounded-xl shadow-lg my-12"
+        alt={brand.name}
+      />
 
-
-      <h2 className="text-center text-3xl text-gold font-serif mb-8">Categories</h2>
+      <h2 className="text-center text-3xl text-gold font-serif mb-8">
+        Categories
+      </h2>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {brand.categories.map((cat) => (
-          <div key={cat.id} className="border border-softgray bg-softgray/10 rounded-xl hover:border-gold transition p-4">
+          <div
+            key={cat.id}
+            className="border border-softgray bg-softgray/10 rounded-xl hover:border-gold transition p-4"
+          >
             <img
-  src={`http://localhost:5000${cat.image}`}
-  className="w-full h-56 object-cover rounded-md mb-4"
-  alt={cat.name}
-/>
+              src={`${import.meta.env.VITE_API_BASE_URL}${cat.image}`}
+              className="w-full h-56 object-cover rounded-md mb-4"
+              alt={cat.name}
+            />
 
-            <h3 className="text-lightgold text-xl font-semibold mb-2">{cat.name}</h3>
+            <h3 className="text-lightgold text-xl font-semibold mb-2">
+              {cat.name}
+            </h3>
+
             <p className="text-softgray text-sm mb-4">{cat.description}</p>
 
             <Link
               to={`/quote/product/${brand.id}/${cat.id}`}
-              onClick={() => setQuoteData(prev => ({ ...prev, brand: brand.name, category: cat.name }))}
+              onClick={() =>
+                setQuoteData((prev) => ({
+                  ...prev,
+                  brand: brand.name,
+                  category: cat.name,
+                }))
+              }
               className="inline-block bg-gold text-black px-5 py-2 rounded-lg hover:bg-lightgold transition"
             >
               View Product

@@ -1,45 +1,47 @@
 import { useParams } from "react-router-dom";
-import { brandsData } from "../data/brandsData";
+import { useEffect, useState } from "react";
 
 export default function CategoryDetail() {
   const { brandId, categoryId } = useParams();
-  const brand = brandsData.find((b) => b.id === brandId);
-  const category = brand?.categories.find((c) => c.id === categoryId);
+  const [brand, setBrand] = useState(null);
 
-  if (!brand || !category)
-    return (
-      <div className="text-center py-20 text-lightgold">
-        Category not found.
-      </div>
-    );
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/brands/${brandId}`)
+      .then((res) => res.json())
+      .then((data) => setBrand(data))
+      .catch(() => setBrand(null));
+  }, [brandId]);
+
+  if (!brand)
+    return <div className="text-center pt-40 text-lightgold">Loading...</div>;
+
+  const category = brand.categories.find((c) => c.id === categoryId);
+
+  if (!category)
+    return <div className="text-center pt-40 text-lightgold">Category Not Found</div>;
+
+  const API = import.meta.env.VITE_API_BASE_URL;
+  const categoryImg = `${API}${category.image}`;
+  const brandLogo = `${API}${brand.logo}`;
 
   return (
-    <section className="min-h-screen bg-richblack text-white px-4 sm:px-6 lg:px-16 py-16">
-      {/* Header */}
-      <div className="text-center mb-10">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-gold mb-4">
-          {category.name}
-        </h1>
-        <p className="text-lightgold text-base sm:text-lg max-w-3xl mx-auto">
-          {category.description}
-        </p>
-      </div>
+    <section className="pt-40 px-6 lg:px-16 text-white pb-20">
+      <h1 className="text-center text-4xl md:text-5xl text-gold font-serif mb-6">
+        {category.name}
+      </h1>
 
-      {/* Image */}
       <img
-        src={category.image}
+        src={categoryImg}
         alt={category.name}
-        className="w-full h-[220px] sm:h-[300px] md:h-[400px] object-cover rounded-xl shadow-lg mb-10"
+        className="w-full h-[260px] sm:h-[350px] object-cover rounded-xl mb-10 shadow-lg border border-softgray"
       />
 
-      {/* CTA */}
-      <div className="text-center">
-        <a
-          href="#"
-          className="bg-gold text-black text-sm sm:text-base px-6 sm:px-8 py-3 rounded-lg font-semibold hover:bg-lightgold transition-all"
-        >
-          Enquire About This Product
-        </a>
+      <p className="text-softgray text-lg max-w-3xl mx-auto text-center leading-relaxed mb-10">
+        {category.description}
+      </p>
+
+      <div className="flex justify-center">
+        <img src={brandLogo} alt={brand.name} className="h-28 object-contain opacity-80" />
       </div>
     </section>
   );
