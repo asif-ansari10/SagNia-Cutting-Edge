@@ -1,4 +1,3 @@
-
 import express from "express";
 import cors from "cors";
 import nodemailer from "nodemailer";
@@ -7,31 +6,37 @@ import mongoose from "mongoose";
 import path from "path";
 import { fileURLToPath } from "url";
 
-import brandRoutes from "./routes/brandRoutes.js"; // API Routes for DB brands/categories
+import brandRoutes from "./routes/brandRoutes.js";
 
 dotenv.config();
 
-// Required to fix "__dirname" in ES Modules
+// Fix "__dirname" in ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+// ✅ CORS (very important)
 app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://sag-nia-cutting-edge.vercel.app", // ✅ correct frontend
+      "https://sag-nia-cutting-edge.vercel.app",
     ],
-    credentials: true,
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
   })
 );
 
+// ✅ Allow preflight
+app.options("*", cors());
+
 app.use(express.json());
 
-// ✅ Serve local uploaded images (logos & category images)
+// ✅ Serve image files from /uploads (for brands/categories)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ✅ CONNECT MONGODB ATLAS
+// ✅ Connect MongoDB Atlas
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -40,7 +45,7 @@ mongoose
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => console.log("❌ MongoDB Error:", err.message));
 
-// ✅ Email Transporter
+// ✅ Setup Email Transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -57,9 +62,9 @@ app.post("/send-contact", async (req, res) => {
     await transporter.sendMail({
       from: `"SagNia Website Contact" <${process.env.CLIENT_EMAIL}>`,
       to: process.env.CLIENT_EMAIL,
-      subject: `Query Message from ${name}`,
+      subject: `New Contact Submission from ${name}`,
       text: `
-SagNia Contact Query Message:
+SagNia Contact Request:
 
 Name: ${name}
 Email: ${email}
@@ -72,57 +77,57 @@ ${message}
 
     res.json({ success: true });
   } catch (error) {
-    console.log(error);
-    res.json({ success: false });
+    console.log("❌ Contact Email Error:", error);
+    res.status(500).json({ success: false });
   }
 });
 
-// ✅ QUOTE REQUEST FORM API
+// ✅ QUOTE REQUEST API
 app.post("/send-quote", async (req, res) => {
   const data = req.body;
 
   const message = `
-🪚 New Quote Request 🪚
+🪚 New Quote Request Received 🪚
 
 Project Name: ${data.projectName}
 
---- CUSTOMER INFO ---
+-- Customer Info --
 Name: ${data.name}
 Email: ${data.email}
 Phone: ${data.phone}
 
---- SELECTION ---
+-- Product Selection --
 Brand: ${data.brand}
 Category: ${data.category}
 
---- MEASUREMENTS ---
+-- Measurements --
 Length: ${data.length} mm
 Width: ${data.width} mm
 Thickness: ${data.thickness} mm
 
-${data.comments ? `--- COMMENTS ---\n${data.comments}` : ""}
+${data.comments ? `Additional Comments:\n${data.comments}` : ""}
 `;
 
   try {
     await transporter.sendMail({
       from: `"SagNia Cutting Edge" <${process.env.CLIENT_EMAIL}>`,
       to: process.env.CLIENT_EMAIL,
-      subject: `New Quote Request: ${data.projectName}`,
+      subject: `Quote Request - ${data.projectName}`,
       text: message,
     });
 
     res.json({ success: true, message: "Quote sent successfully!" });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: "Failed to send email" });
+    console.log("❌ Quote Email Error:", error);
+    res.status(500).json({ success: false, message: "Failed to send quote" });
   }
 });
 
-// ✅ BRAND & CATEGORY FETCH ROUTES
+// ✅ GET Brands/Categories from DB
 app.use("/api/brands", brandRoutes);
 
-// ✅ START SERVER
+// ✅ Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>
-  console.log(`✅ Server running on http://localhost:${PORT}`)
+  console.log(`✅ Server running on port: ${PORT}`)
 );
