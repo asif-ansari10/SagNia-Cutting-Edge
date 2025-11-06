@@ -10,33 +10,40 @@ import brandRoutes from "./routes/brandRoutes.js";
 
 dotenv.config();
 
-// Fix "__dirname" in ES Modules
+// __dirname in ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// ✅ CORS (very important)
+// CORS
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://sag-nia-cutting-edge.vercel.app",
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://sag-nia-cutting-edge.vercel.app",
-    ],
+    origin: (origin, cb) => {
+      // allow same-origin / curl / server-to-server (no origin header)
+      if (!origin) return cb(null, true);
+      if (allowedOrigins.includes(origin)) return cb(null, true);
+      return cb(new Error("Not allowed by CORS"), false);
+    },
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type"],
   })
 );
 
-// ✅ Allow preflight
-app.options("*", cors());
+// ✅ Express v5: DON'T use "*". Use a regex for preflight.
+app.options(/.*/, cors());
 
 app.use(express.json());
 
-// ✅ Serve image files from /uploads (for brands/categories)
+// Static files (logos, banners, categories)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ✅ Connect MongoDB Atlas
+// MongoDB
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -45,7 +52,7 @@ mongoose
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => console.log("❌ MongoDB Error:", err.message));
 
-// ✅ Setup Email Transporter
+// Mailer
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -54,7 +61,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// ✅ CONTACT FORM API
+// Contact API
 app.post("/send-contact", async (req, res) => {
   const { name, email, phone, message } = req.body;
 
@@ -82,7 +89,7 @@ ${message}
   }
 });
 
-// ✅ QUOTE REQUEST API
+// Quote API
 app.post("/send-quote", async (req, res) => {
   const data = req.body;
 
@@ -123,11 +130,11 @@ ${data.comments ? `Additional Comments:\n${data.comments}` : ""}
   }
 });
 
-// ✅ GET Brands/Categories from DB
+// Brands API
 app.use("/api/brands", brandRoutes);
 
-// ✅ Start Server
+// Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
-  console.log(`✅ Server running on port: ${PORT}`)
-);
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+});
