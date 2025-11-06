@@ -15,33 +15,33 @@ export default function Contact() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  setStatus("");
+  setLoading(true);
 
-    setStatus("");
-    setLoading(true);
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/send-contact`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
 
-    try {
-      const response = await fetch("http://localhost:5000/send-contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+    const data = await response.json();
 
-      const data = await response.json();
-
-      if (data.success) {
-        setStatus("✅ Message sent successfully!");
-        setForm({ name: "", email: "", phone: "", message: "" });
-      } else {
-        setStatus("❌ Failed to send message. Please try again.");
-      }
-    } catch (error) {
-      console.error(error);
-      setStatus("❌ Error connecting to server.");
+    if (data.success) {
+      setStatus("✅ Message sent successfully!");
+      setForm({ name: "", email: "", phone: "", message: "" });
+    } else {
+      setStatus("❌ Failed to send message. Please try again.");
     }
+  } catch (error) {
+    console.error(error);
+    setStatus("❌ Error connecting to server.");
+  }
 
-    setLoading(false);
-  };
+  setLoading(false);
+};
+
 
   return (
     <section className="min-h-screen bg-richblack text-white px-4 sm:px-6 lg:px-16 pt-40 pb-16 flex flex-col items-center justify-center">
