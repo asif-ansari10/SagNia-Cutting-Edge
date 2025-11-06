@@ -20,21 +20,22 @@ export default function Brands() {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8">
         {brands.map((brand) => (
           <Link
-            key={brand.id}
-            to={`/quote/brands/${brand.id}`}   // ✅ Use string id
-            onClick={() =>
-              setQuoteData((prev) => ({ ...prev, brand: brand.id }))
-            }
-            className="p-6 border border-softgray rounded-xl hover:border-gold hover:scale-105 transition-all text-center"
-          >
-            <img
-              src={`${import.meta.env.VITE_API_BASE_URL}${brand.logo}`}
-              className="h-16 mx-auto mb-3 object-contain"
-              alt={brand.name}
-            />
+  key={brand.id}
+  to={`/quote/brands/${brand.id}`}
+  onClick={() =>
+    setQuoteData((prev) => ({ ...prev, brand: brand.id }))
+  }
+  className="p-6 bg-white text-black border border-softgray rounded-xl hover:border-gold hover:shadow-lg hover:scale-105 transition-all text-center"
+>
+  <img
+    src={`${import.meta.env.VITE_API_BASE_URL}${brand.logo}`}
+    className="h-16 mx-auto mb-3 object-contain"
+    alt={brand.name}
+  />
 
-            <p className="text-lightgold">{brand.name}</p>
-          </Link>
+  
+</Link>
+
         ))}
       </div>
     </section>

@@ -36,7 +36,7 @@ export default function Footer() {
         {/* Logo + About */}
         <div>
           <img src={logo} alt="SagNia Logo" className="h-16 w-auto mb-4" />
-          <p className="text-softgray text-sm leading-relaxed">
+          <p className="text-white text-sm leading-relaxed">
             At <span className="text-gold font-semibold">SagNia Cutting Edge</span>,
             we combine innovation with craftsmanship to deliver premium quality solutions
             for your modern interiors.
@@ -51,7 +51,7 @@ export default function Footer() {
             <li>
               <button
                 onClick={handleHomeClick}
-                className="text-softgray hover:text-gold transition-colors duration-300"
+                className="text-white hover:text-gold transition-colors duration-300"
               >
                 Home
               </button>
@@ -60,7 +60,7 @@ export default function Footer() {
             <li>
               <button
                 onClick={() => handleScrollOrNavigate("edgeBanding")}
-                className="text-softgray hover:text-gold transition-colors duration-300"
+                className="text-white hover:text-gold transition-colors duration-300"
               >
                 Edge Banding
               </button>
@@ -69,7 +69,7 @@ export default function Footer() {
             <li>
               <button
                 onClick={() => handleScrollOrNavigate("panelCutting")}
-                className="text-softgray hover:text-gold transition-colors duration-300"
+                className="text-white hover:text-gold transition-colors duration-300"
               >
                 Panel Cutting
               </button>
@@ -78,7 +78,7 @@ export default function Footer() {
             <li>
               <button
                 onClick={() => handleScrollOrNavigate("cncSection")}
-                className="text-softgray hover:text-gold transition-colors duration-300"
+                className="text-white hover:text-gold transition-colors duration-300"
               >
                 CNC
               </button>
@@ -87,7 +87,7 @@ export default function Footer() {
             <li>
               <Link
                 to="/faqs"
-                className="text-softgray hover:text-gold transition-colors duration-300"
+                className="text-white hover:text-gold transition-colors duration-300"
               >
                 FAQs
               </Link>
@@ -96,7 +96,7 @@ export default function Footer() {
             <li>
               <Link
                 to="/contact"
-                className="text-softgray hover:text-gold transition-colors duration-300"
+                className="text-white hover:text-gold transition-colors duration-300"
               >
                 Contact
               </Link>
@@ -108,7 +108,7 @@ export default function Footer() {
         {/* Contact Info */}
         <div>
           <h3 className="text-gold text-lg font-semibold mb-3">Contact</h3>
-          <ul className="space-y-2 text-softgray">
+          <ul className="space-y-2 text-white">
             <li className="flex items-center gap-2">
               <FaPhone className="text-gold" />
               <span>0113 234 0737</span>

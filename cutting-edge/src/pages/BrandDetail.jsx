@@ -53,7 +53,7 @@ export default function BrandDetail() {
               {cat.name}
             </h3>
 
-            <p className="text-softgray text-sm mb-4">{cat.description}</p>
+            <p className="text-white text-sm mb-4">{cat.description}</p>
 
             <Link
               to={`/quote/product/${brand.id}/${cat.id}`}
