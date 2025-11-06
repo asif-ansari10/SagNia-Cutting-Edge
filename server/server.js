@@ -16,13 +16,16 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://sag-nia-cutting-edge.vercel.app"
-  ],
-  methods: ["GET", "POST"],
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://sag-nia-cutting-edge.vercel.app", // ✅ correct frontend
+    ],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 // ✅ Serve local uploaded images (logos & category images)
