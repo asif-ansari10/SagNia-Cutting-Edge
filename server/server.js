@@ -54,12 +54,15 @@ mongoose
 
 // Mailer
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.CLIENT_EMAIL,
     pass: process.env.CLIENT_APP_PASSWORD,
   },
 });
+
 
 // Contact API
 app.post("/send-contact", async (req, res) => {
