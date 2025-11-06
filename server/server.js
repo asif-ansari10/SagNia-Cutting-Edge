@@ -87,10 +87,11 @@ ${message}
 
     res.json({ success: true });
   } catch (error) {
-    console.log("❌ Contact Email Error:", error);
-    res.status(500).json({ success: false });
+    console.log("❌ Contact Email Error:", error); // <-- PRINT FULL ERROR
+    return res.status(500).json({ success: false, error: error.message });
   }
 });
+
 
 // Quote API
 app.post("/send-quote", async (req, res) => {
